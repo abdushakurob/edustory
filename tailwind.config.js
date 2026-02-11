@@ -7,32 +7,48 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        border: "#e5e7eb",
-        background: "#ffffff",
-        foreground: "#1f2937",
-        primary: "#2563eb",
-        secondary: "#64748b",
-        accent: "#f59e0b",
-        destructive: "#ef4444",
-      },
-      spacing: {
-        128: "32rem",
-        144: "36rem",
+        border: "rgba(255, 255, 255, 0.35)",
+        input: "rgba(255, 255, 255, 0.5)",
+        ring: "rgba(37, 99, 235, 0.4)",
+        background: "#f3f4f6", // neutral-100
+        foreground: "#1f2937", // neutral-800
+        primary: {
+          DEFAULT: "#2563eb", // blue-600
+          foreground: "#ffffff",
+        },
+        secondary: {
+          DEFAULT: "#f1f5f9", // slate-100
+          foreground: "#1e293b", // slate-800
+        },
+        destructive: {
+          DEFAULT: "#ef4444", // red-500
+          foreground: "#ffffff",
+        },
+        muted: {
+          DEFAULT: "#94a3b8", // slate-400
+          foreground: "#cbd5e1", // slate-300
+        },
+        accent: {
+          DEFAULT: "#10b981", // emerald-500
+          foreground: "#ffffff",
+        },
+        glass: {
+          border: "rgba(255, 255, 255, 0.35)",
+          surface: "rgba(255, 255, 255, 0.45)",
+          highlight: "rgba(255, 255, 255, 0.2)",
+        },
       },
       borderRadius: {
-        lg: "0.5rem",
-        md: "0.375rem",
-        sm: "0.25rem",
+        lg: "1.25rem", // 20px
+        md: "0.875rem", // 14px
+        sm: "0.5rem",   // 8px
       },
-      fontSize: {
-        xs: ["0.75rem", { lineHeight: "1rem" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem" }],
-        base: ["1rem", { lineHeight: "1.5rem" }],
-        lg: ["1.125rem", { lineHeight: "1.75rem" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],
-        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem" }],
+      boxShadow: {
+        glass: "0 8px 32px 0 rgba(31, 38, 135, 0.07)",
+        "glass-sm": "0 4px 16px 0 rgba(31, 38, 135, 0.05)",
+      },
+      backdropBlur: {
+        xs: "2px",
       },
     },
   },

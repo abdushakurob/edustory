@@ -1,115 +1,162 @@
-import Link from "next/link";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { GlassPanel } from "@/components/ui/GlassPanel";
+import { Play, Clock, MoreHorizontal, Plus } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-neutral-100">
-      <div className="max-w-6xl mx-auto px-6 py-20">
-        <div className="text-center space-y-6 mb-16">
-          <h1 className="heading-1 text-5xl">
-            Learn Better with{" "}
-            <span className="text-blue-600">StoryMind AI</span>
+    <DashboardLayout>
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
+            Welcome back, Alex
           </h1>
-          <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-            Transform your study materials into engaging narratives. Upload
-            documents, watch them become interactive stories, and master the
-            content through intelligent questions.
+          <p className="text-neutral-500 mt-1">
+            Continue where you left off or start a new story.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/login" className="btn-primary px-8 py-3 text-lg">
-              Sign In
-            </Link>
-            <Link href="/register" className="btn-secondary px-8 py-3 text-lg">
-              Get Started
-            </Link>
+        </div>
+        <button className="bg-primary text-white px-6 py-2.5 rounded-xl font-medium shadow-sm hover:bg-primary/90 transition-all flex items-center gap-2">
+          <Plus className="w-5 h-5" />
+          New Story
+        </button>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-12 gap-8">
+        {/* Recents Section */}
+        <div className="col-span-8 space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-neutral-800">
+              Continue Learning
+            </h2>
+            <button className="text-sm text-primary font-medium hover:text-primary/80 transition-colors">
+              View All
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {[1, 2, 3].map((i) => (
+              <GlassPanel
+                key={i}
+                hoverEffect
+                className="p-4 flex items-center gap-4 cursor-pointer group"
+              >
+                <div className="w-16 h-16 rounded-lg bg-neutral-100 flex items-center justify-center text-2xl shadow-inner">
+                  {i === 1 ? "🧬" : i === 2 ? "⚛️" : "🌍"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-neutral-900 group-hover:text-primary transition-colors">
+                    {i === 1
+                      ? "Introduction to Molecular Biology"
+                      : i === 2
+                        ? "Quantum Physics Basics"
+                        : "Global Climate Systems"}
+                  </h3>
+                  <div className="flex items-center gap-4 mt-1 text-xs text-neutral-500">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      12m left
+                    </span>
+                    <span>•</span>
+                    <span>Updated 2h ago</span>
+                  </div>
+                </div>
+                <button className="p-2 hover:bg-neutral-100 rounded-full text-neutral-400 hover:text-neutral-600 transition-colors">
+                  <Play className="w-5 h-5 fill-current" />
+                </button>
+              </GlassPanel>
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold text-neutral-800 mb-4">
+              Your Library
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <GlassPanel
+                  key={i}
+                  hoverEffect
+                  className="p-5 flex flex-col gap-4 cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <div className="font-bold">Ch</div>
+                    </div>
+                    <button className="text-neutral-400 hover:text-neutral-600">
+                      <MoreHorizontal className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-neutral-900 line-clamp-1">
+                      Chapter 4: Neural Networks
+                    </h3>
+                    <p className="text-xs text-neutral-500 mt-1">
+                      24 pages • PDF
+                    </p>
+                  </div>
+                  <div className="w-full bg-neutral-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div
+                      className="bg-primary h-full rounded-full"
+                      style={{ width: `${Math.random() * 100}%` }}
+                    />
+                  </div>
+                </GlassPanel>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="card-base p-8 space-y-4">
-            <div className="text-4xl">📚</div>
-            <h3 className="heading-3">Upload Documents</h3>
-            <p className="text-neutral-600">
-              Upload PDFs, Word docs, presentations, or images. We'll extract
-              everything.
-            </p>
-          </div>
-          <div className="card-base p-8 space-y-4">
-            <div className="text-4xl">✨</div>
-            <h3 className="heading-3">AI Transforms Content</h3>
-            <p className="text-neutral-600">
-              Gemini converts academic material into compelling narratives.
-            </p>
-          </div>
-          <div className="card-base p-8 space-y-4">
-            <div className="text-4xl">🎯</div>
-            <h3 className="heading-3">Quiz & Master</h3>
-            <p className="text-neutral-600">
-              Interactive questions reinforce learning with personalized
-              feedback.
-            </p>
-          </div>
-        </div>
+        {/* Right Sidebar / Stats */}
+        <div className="col-span-4 space-y-6">
+          <GlassPanel className="p-6">
+            <h3 className="font-semibold text-neutral-900 mb-4">
+              Weekly Progress
+            </h3>
+            <div className="flex items-end gap-2 h-32 justify-between px-2">
+              {[40, 70, 45, 90, 60, 80, 50].map((h, i) => (
+                <div key={i} className="flex flex-col items-center gap-2 group">
+                  <div
+                    className="w-8 bg-blue-100 rounded-t-lg relative group-hover:bg-blue-200 transition-colors"
+                    style={{ height: `${h}%` }}
+                  >
+                    <div
+                      className="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all duration-500"
+                      style={{ height: `${h * 0.4}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-neutral-400 font-medium">
+                    {["M", "T", "W", "T", "F", "S", "S"][i]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </GlassPanel>
 
-        <div className="card-base p-12 space-y-8">
-          <h2 className="heading-2 text-center">How It Works</h2>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                1
-              </div>
-              <div>
-                <h4 className="font-semibold text-neutral-900">
-                  Create a Subject
-                </h4>
-                <p className="text-neutral-600">
-                  Biology, Physics, History - organize your learning by topic.
-                </p>
-              </div>
+          <GlassPanel className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-neutral-900">
+                Quick Actions
+              </h3>
             </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h4 className="font-semibold text-neutral-900">
-                  Upload Materials
-                </h4>
-                <p className="text-neutral-600">
-                  Add any document or image. We extract and organize the
-                  content.
-                </p>
-              </div>
+            <div className="space-y-2">
+              <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-50 text-sm font-medium text-neutral-700 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  +
+                </div>
+                Upload Document
+              </button>
+              <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-neutral-50 text-sm font-medium text-neutral-700 transition-colors flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                  ?
+                </div>
+                Take a Quiz
+              </button>
             </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h4 className="font-semibold text-neutral-900">
-                  Generate Stories
-                </h4>
-                <p className="text-neutral-600">
-                  AI creates narrative explanations that make content stick.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                4
-              </div>
-              <div>
-                <h4 className="font-semibold text-neutral-900">
-                  Practice & Learn
-                </h4>
-                <p className="text-neutral-600">
-                  Answer questions and get personalized feedback to solidify
-                  knowledge.
-                </p>
-              </div>
-            </div>
-          </div>
+          </GlassPanel>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
+
