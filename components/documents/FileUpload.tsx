@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Upload, FileText } from "lucide-react";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 
 interface FileUploadProps {
   subjectId: string;
@@ -59,7 +60,7 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="card-base p-6 space-y-4">
+    <GlassPanel className="p-6 space-y-4">
       <h3 className="text-lg font-semibold text-neutral-900">
         Upload Document
       </h3>
@@ -72,7 +73,7 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="input-base"
+          className="glass-input w-full"
           placeholder="e.g., Chapter 3 - Photosynthesis"
           disabled={loading}
         />
@@ -93,7 +94,7 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
           />
           <label
             htmlFor="file-input"
-            className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-neutral-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors"
+            className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-neutral-300/50 rounded-lg cursor-pointer hover:border-blue-400/50 hover:bg-blue-50/30 transition-colors"
           >
             <Upload size={20} className="text-neutral-400" />
             <span className="text-neutral-600">
@@ -106,10 +107,10 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
       <button
         type="submit"
         disabled={!file || !title || loading}
-        className="btn-primary w-full"
+        className="glass-button w-full py-2.5"
       >
         {loading ? "Uploading..." : "Upload Document"}
       </button>
-    </form>
+    </GlassPanel>
   );
 }
