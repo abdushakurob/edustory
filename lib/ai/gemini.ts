@@ -9,11 +9,11 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 export const textModel = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-3-pro-preview",
 });
 
 export const visionModel = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-3-pro-preview",
 });
 
 export interface StoryContent {
@@ -35,28 +35,36 @@ export interface Question {
   difficulty: "easy" | "medium" | "hard";
 }
 
-const SYSTEM_PROMPT_TEMPLATE = `You are an expert educational AI specialized in converting academic content into engaging narratives.
+const SYSTEM_PROMPT_TEMPLATE = `You are an expert Nigerian educational storyteller specialized in converting academic content into engaging, relatable narratives rooted in real-life Nigerian contexts.
 
 Your role:
 1. Read academic content carefully
 2. Extract ONLY information present in the provided content
-3. Create accurate, story-based explanations that maintain factual integrity
-4. Generate pedagogically sound questions
+3. Create vivid, story-based explanations that feel natural and authentic to Nigerian culture
+4. Use familiar Nigerian scenarios, settings, and examples while maintaining factual accuracy
+5. Generate pedagogically sound questions
 
 IMPORTANT CONSTRAINTS:
 - NEVER hallucinate or add information not in the source material
 - NEVER make up examples or facts
 - Stay strictly within the provided document context
-- Maintain accuracy while using narrative metaphors
+- Maintain accuracy while using narrative metaphors grounded in Nigerian reality
 
 Theme: {theme}
 Subject: {subject}
 
 When creating stories:
-- Use the "{theme}" theme to frame explanations
-- Connect concepts to real-world scenarios without losing accuracy
-- Maintain academic rigor while improving accessibility
-- Always cite which part of the content supports each claim`;
+- Set stories in familiar Nigerian contexts (markets, schools, homes, industries)
+- Use relatable characters that reflect Nigerian society
+- Include cultural nuances and local knowledge that make the content feel authentic
+- Use natural Nigerian English (including local expressions where appropriate)
+- Connect concepts to everyday scenarios Nigerians encounter
+- Reference local examples and situations
+- Maintain academic rigor while improving accessibility through storytelling
+- Make the narrative conversational and engaging, as if told by a trusted mentor
+- Always cite which part of the content supports each claim
+
+TONE: Warm, conversational, encouraging - like learning from an experienced teacher who understands Nigerian context.`;
 
 export function buildSystemPrompt(subject: string, theme: string): string {
   return SYSTEM_PROMPT_TEMPLATE.replace("{subject}", subject).replace(
@@ -73,7 +81,11 @@ export async function generateStory(
 ): Promise<StoryContent> {
   const systemPrompt = buildSystemPrompt(subject, theme);
 
-  const prompt = `Content to convert into a story:
+  const prompt = `${systemPrompt}
+
+---
+
+Content to convert into a story:
 
 <content>
 ${content}
@@ -81,14 +93,22 @@ ${content}
 
 ${section ? `Section: ${section}` : ""}
 
+Create a COMPELLING NIGERIAN-ROOTED STORY that:
+- Opens with a relatable Nigerian scenario or character
+- Weaves the academic concepts naturally into the narrative
+- Uses conversational Nigerian English tone
+- Includes 2-3 real-life Nigerian examples or analogies
+- Feels like a story you'd tell a friend, not a textbook explanation
+- Maintains 100% accuracy to the source material
+
 Generate a JSON response with this exact structure:
 {
-  "narrative": "A compelling story explanation (2-3 paragraphs) that transforms this academic content into an engaging narrative while maintaining 100% accuracy to the source",
+  "narrative": "A vivid, engaging story (2-3 paragraphs) that brings this academic content to life through Nigerian contexts and real-world scenarios. The reader should feel like they're learning from an experienced mentor.",
   "keyPoints": ["Key concept 1", "Key concept 2", "Key concept 3"],
-  "summary": "One sentence summary"
+  "summary": "One sentence summary that captures both the concept and the Nigerian context"
 }
 
-CRITICAL: Only use facts from the provided content. Do not add external information.`;
+CRITICAL: Only use facts from the provided content. Do not add external information. Make it Nigerian. Make it real. Make it engaging.`;
 
   try {
     const result = await textModel.generateContent({
@@ -98,7 +118,6 @@ CRITICAL: Only use facts from the provided content. Do not add external informat
           parts: [{ text: prompt }],
         },
       ],
-      systemInstruction: systemPrompt,
     });
 
     const text = result.response.text();
@@ -128,7 +147,11 @@ export async function generateQuestions(
 ): Promise<QuestionSet> {
   const systemPrompt = buildSystemPrompt(subject, theme);
 
-  const prompt = `Content for question generation:
+  const prompt = `${systemPrompt}
+
+---
+
+Content for question generation:
 
 <content>
 ${content}
@@ -167,7 +190,6 @@ CRITICAL REQUIREMENTS:
           parts: [{ text: prompt }],
         },
       ],
-      systemInstruction: systemPrompt,
     });
 
     const text = result.response.text();
@@ -196,7 +218,11 @@ export async function generateFeedback(
 ): Promise<string> {
   const systemPrompt = buildSystemPrompt(subject, theme);
 
-  const prompt = `Student submitted an answer to this question:
+  const prompt = `${systemPrompt}
+
+---
+
+Student submitted an answer to this question:
 
 Question: ${question}
 Correct Answer: ${correctAnswer}
@@ -218,7 +244,6 @@ Format as plain text, not JSON.`;
           parts: [{ text: prompt }],
         },
       ],
-      systemInstruction: systemPrompt,
     });
 
     return result.response.text();

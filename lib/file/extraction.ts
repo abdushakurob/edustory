@@ -33,6 +33,15 @@ export async function extractDocxText(buffer: Buffer): Promise<string> {
   }
 }
 
+export async function extractTextFile(buffer: Buffer): Promise<string> {
+  try {
+    return buffer.toString("utf-8");
+  } catch (error) {
+    console.error("Error extracting text file:", error);
+    throw new Error("Failed to extract text file");
+  }
+}
+
 export function chunkText(text: string, chunkSize: number = 2000): string[] {
   const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
   const chunks: string[] = [];

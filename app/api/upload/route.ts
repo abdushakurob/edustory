@@ -4,6 +4,7 @@ import { saveUploadedFile, validateFileType } from "@/lib/file/storage";
 import {
   extractPdfText,
   extractDocxText,
+  extractTextFile,
   chunkText,
   cleanText,
 } from "@/lib/file/extraction";
@@ -49,6 +50,8 @@ export async function POST(request: NextRequest) {
       extractedText = await extractPdfText(buffer);
     } else if (fileType === "docx") {
       extractedText = await extractDocxText(buffer);
+    } else if (fileType === "txt") {
+      extractedText = await extractTextFile(buffer);
     } else if (["png", "jpg", "jpeg"].includes(fileType)) {
       extractedText = await extractImageText(buffer);
     } else if (fileType === "ppt" || fileType === "pptx") {
