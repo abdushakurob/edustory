@@ -137,17 +137,28 @@ export async function generateSectionQuestions(
 
   if (!section) throw new Error("Section not found");
 
-  // Get the story for context
+  // Get the story for context - IMPORTANT: story provides the AI-generated narrative
   const story = await prisma.story.findUnique({
     where: { sectionId },
   });
 
+  if (!story) {
+    throw new Error(
+      "Please generate the story first before creating questions",
+    );
+  }
+
+  // Generate questions using BOTH story narrative and original content
   const questionSet = await generateQuestions(
     section.content,
     subject.title,
     subject.theme,
-    story?.narrative || undefined,
+    story.narrative, // Use the AI-generated story narrative
   );
+
+  if (!questionSet.questions || questionSet.questions.length === 0) {
+    throw new Error("Failed to generate valid questions. Please try again.");
+  }
 
   // Save questions to database
   const savedQuestions = await Promise.all(
