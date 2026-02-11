@@ -85,7 +85,7 @@ export async function generateStory(
 
 ---
 
-Content to convert into a story:
+Academic content to abstract into a story:
 
 <content>
 ${content}
@@ -93,22 +93,29 @@ ${content}
 
 ${section ? `Section: ${section}` : ""}
 
-Create a COMPELLING NIGERIAN-ROOTED STORY that:
-- Opens with a relatable Nigerian scenario or character
-- Weaves the academic concepts naturally into the narrative
-- Uses conversational Nigerian English tone
-- Includes 2-3 real-life Nigerian examples or analogies
-- Feels like a story you'd tell a friend, not a textbook explanation
-- Maintains 100% accuracy to the source material
+TASK: Create an ABSTRACT STORY that explains the core concepts from this content.
 
-Generate a JSON response with this exact structure:
+Do NOT simply convert the text. Instead:
+1. Identify the 3-5 KEY CONCEPTS in the content
+2. Create a coherent narrative story set in Nigeria that DEMONSTRATES these concepts through action and dialogue
+3. Use characters, situations, and dialogue to show (not tell) how these concepts work in real life
+4. Make it a story people will remember - engaging, emotional, relatable
+5. The story should naturally reveal the concepts without explicit explanations
+
+Create a JSON response with this exact structure:
 {
-  "narrative": "A vivid, engaging story (2-3 paragraphs) that brings this academic content to life through Nigerian contexts and real-world scenarios. The reader should feel like they're learning from an experienced mentor.",
-  "keyPoints": ["Key concept 1", "Key concept 2", "Key concept 3"],
-  "summary": "One sentence summary that captures both the concept and the Nigerian context"
+  "narrative": "A compelling abstract story (3-4 paragraphs) set in Nigeria with relatable characters and situations that naturally demonstrate and explain the core concepts. It should feel like a short story, not a lesson. Readers should learn the concepts through the narrative itself.",
+  "keyPoints": ["Core concept 1 extracted from story", "Core concept 2 extracted from story", "Core concept 3 extracted from story"],
+  "summary": "One sentence that states the main concept demonstrated by the story"
 }
 
-CRITICAL: Only use facts from the provided content. Do not add external information. Make it Nigerian. Make it real. Make it engaging.`;
+CRITICAL INSTRUCTIONS:
+- Create a STORY, not a summary or explanation
+- The concepts should be embedded in the narrative, not stated directly
+- Use dialogue, action, and conflict to show concepts in practice
+- Make Nigerian characters and settings authentic and specific
+- Only draw concepts from the provided content
+- Make it engaging enough that someone would want to read it again`;
 
   try {
     const result = await textModel.generateContent({
@@ -145,42 +152,36 @@ export async function generateQuestions(
   theme: string,
   narrative?: string,
 ): Promise<QuestionSet> {
-  const systemPrompt = buildSystemPrompt(subject, theme);
+  const prompt = `You are an expert educator creating comprehension questions about this story and content.
 
-  const prompt = `${systemPrompt}
+${narrative ? `STORY:\n${narrative.substring(0, 600)}\n\n` : ""}
+CONTENT:\n${content.substring(0, 500)}
 
----
+Subject: ${subject}
+Theme: ${theme}
 
-Content for question generation:
+Create exactly 3 specific multiple-choice questions that test understanding of this story/content.
 
-<content>
-${content}
-</content>
+REQUIREMENTS:
+- Questions MUST reference specific details from the story/content
+- Options should be plausible but distinct
+- Explanations should cite the story/content
+- Vary difficulty: easy, medium, hard
+- NO generic questions like "What is the main concept?"
 
-${narrative ? `\nNarrative context:\n${narrative}` : ""}
-
-Generate 3-5 comprehension questions in JSON format:
+Output ONLY valid JSON:
 {
   "questions": [
     {
-      "questionText": "Clear question based on the content",
+      "questionText": "Specific question about the story/content",
       "questionType": "multiple_choice",
-      "options": ["Option A", "Option B", "Option C", "Option D"],
-      "correctAnswer": "Option A",
-      "explanation": "Story-based explanation of why this answer is correct, referencing the narrative",
+      "options": ["Correct answer from story", "Wrong but plausible", "Wrong but plausible", "Wrong but plausible"],
+      "correctAnswer": "Correct answer from story",
+      "explanation": "Explanation with reference to the story/content",
       "difficulty": "medium"
     }
   ]
-}
-
-Question types: "multiple_choice", "short_answer", "true_false"
-Difficulties: "easy", "medium", "hard"
-
-CRITICAL REQUIREMENTS:
-1. All questions must be answerable ONLY from the provided content
-2. Explanations must reference the narrative/story
-3. Do not add external facts
-4. Ensure pedagogical variety (not all easy, not all hard)`;
+}`;
 
   try {
     const result = await textModel.generateContent({
@@ -193,15 +194,47 @@ CRITICAL REQUIREMENTS:
     });
 
     const text = result.response.text();
+    console.log(
+      "Generated questions response (first 200 chars):",
+      text.substring(0, 200),
+    );
+
     const jsonMatch = text.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
-      throw new Error("Invalid response format from Gemini");
+      console.warn("No JSON found in response");
+      throw new Error("Could not parse AI response");
     }
 
     const parsed = JSON.parse(jsonMatch[0]);
+
+    if (
+      !parsed.questions ||
+      !Array.isArray(parsed.questions) ||
+      parsed.questions.length === 0
+    ) {
+      console.warn("No questions in response");
+      throw new Error("No questions generated");
+    }
+
+    // Ensure each question has required fields
+    const validQuestions = parsed.questions.filter(
+      (q: any) =>
+        q.questionText &&
+        q.options &&
+        Array.isArray(q.options) &&
+        q.options.length >= 2 &&
+        q.correctAnswer &&
+        q.explanation,
+    );
+
+    if (validQuestions.length === 0) {
+      console.error("No valid questions after filtering");
+      throw new Error("Generated questions do not meet requirements");
+    }
+
     return {
-      questions: parsed.questions || [],
+      questions: validQuestions,
     };
   } catch (error) {
     console.error("Error generating questions:", error);
