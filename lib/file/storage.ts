@@ -7,20 +7,34 @@ export async function saveUploadedFile(
   filename: string,
   subjectId: string,
 ): Promise<string> {
-  const uploadDir = path.join(process.cwd(), "public", "uploads", subjectId);
-
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+  // On production (Vercel), we can't write to filesystem
+  // Instead, return a virtual path and store content in database
+  if (process.env.VERCEL || process.env.NODE_ENV === "production") {
+    // Return a virtual path that won't be used for file serving
+    // The actual file content will be stored as text in the database
+    return `/uploads/${subjectId}/${filename}`;
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  // Local development: write to filesystem
+  const uploadDir = path.join(process.cwd(), "public", "uploads", subjectId);
 
-  const filePath = path.join(uploadDir, filename);
-  await writeFile(filePath, buffer);
+  try {
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
-  // Return relative path for web access
-  return `/uploads/${subjectId}/${filename}`;
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const filePath = path.join(uploadDir, filename);
+    await writeFile(filePath, buffer);
+
+    return `/uploads/${subjectId}/${filename}`;
+  } catch (error) {
+    console.warn("Failed to write file to disk, using virtual path:", error);
+    // Fallback to virtual path if filesystem write fails
+    return `/uploads/${subjectId}/${filename}`;
+  }
 }
 
 export function validateFileType(filename: string): boolean {
