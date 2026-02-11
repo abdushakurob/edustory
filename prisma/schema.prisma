@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+datasource db {
+   provider = "postgresql"
+   url      = env("postgresql://neondb_owner:npg_TmoQn2Kud4MN@ep-autumn-dew-ainrh9lj-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+}
+
+model User {
+   id        String   @id @default(cuid())
+   email     String   @unique
+   password  String
+   name      String?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+   subjects Subject[]
+   answers  AnswerAttempt[]
+
+   @@index([email])
+}
+
+model Subject {
+   id          String   @id @default(cuid())
+   userId      String
+   title       String
+   description String?
+   theme       String   @default("Academic") // Academic, City, World, Lab, Courtroom
+   createdAt   DateTime @default(now())
+   updatedAt   DateTime @updatedAt
+
+   user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+   documents Document[]
+   stories   Story[]
+   questions Question[]
+   answers   AnswerAttempt[]
+
+   @@unique([userId, title])
+   @@index([userId])
+}
+
+model Document {
+   id            String   @id @default(cuid())
+   subjectId     String
+   title         String
+   fileName      String
+   fileType      String // pdf, docx, ppt, image
+   filePath      String
+   fileSize      Int
+   extractedText String?
+   createdAt     DateTime @default(now())
+   updatedAt     DateTime @updatedAt
+
+   subject  Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+   sections Section[]
+
+   @@index([subjectId])
+}
+
+model Section {
+   id            String   @id @default(cuid())
+   documentId    String
+   sectionNumber Int
+   title         String?
+   content       String // Raw extracted content
+   order         Int      @default(0)
+   createdAt     DateTime @default(now())
+   updatedAt     DateTime @updatedAt
+
+   document  Document   @relation(fields: [documentId], references: [id], onDelete: Cascade)
+   story     Story?
+   questions Question[]
+
+   @@index([documentId])
+}
+
+model Story {
+   id        String   @id @default(cuid())
+   sectionId String   @unique
+   subjectId String
+   narrative String // Story explanation
+   keyPoints String // JSON array of key points
+   summary   String?
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+   section Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+   subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+   @@index([sectionId])
+   @@index([subjectId])
+}
+
+model Question {
+   id            String   @id @default(cuid())
+   sectionId     String
+   subjectId     String
+   questionText  String
+   questionType  String   @default("multiple_choice") // multiple_choice, short_answer, true_false
+   options       String? // JSON array for multiple choice
+   correctAnswer String
+   explanation   String // Story-based explanation for correct answer
+   difficulty    String   @default("medium") // easy, medium, hard
+   order         Int      @default(0)
+   createdAt     DateTime @default(now())
+   updatedAt     DateTime @updatedAt
+
+   section  Section         @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+   subject  Subject         @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+   attempts AnswerAttempt[]
+
+   @@index([sectionId])
+   @@index([subjectId])
+}
+
+model AnswerAttempt {
+   id         String   @id @default(cuid())
+   userId     String
+   subjectId  String
+   questionId String
+   userAnswer String
+   isCorrect  Boolean
+   feedback   String? // Personalized feedback based on story
+   timeSpent  Int? // In seconds
+   createdAt  DateTime @default(now())
+   updatedAt  DateTime @updatedAt
+
+   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+   subject  Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+   @@index([userId])
+   @@index([subjectId])
+   @@index([questionId])
+}
+
+model AIContext {
+   id            String   @id @default(cuid())
+   subjectId     String   @unique
+   systemPrompt  String
+   contextWindow String // JSON with relevant documents/stories
+   createdAt     DateTime @default(now())
+   updatedAt     DateTime @updatedAt
+
+   @@index([subjectId])
+}
