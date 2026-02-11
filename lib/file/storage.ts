@@ -29,6 +29,7 @@ export function validateFileType(filename: string): boolean {
     ".docx",
     ".ppt",
     ".pptx",
+    ".txt",
     ".png",
     ".jpg",
     ".jpeg",

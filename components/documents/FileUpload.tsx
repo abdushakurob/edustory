@@ -80,13 +80,13 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-neutral-700">
-          File (PDF, DOCX, PPT, or Image)
+          File (PDF, DOCX, PPT, TXT, or Image)
         </label>
         <div className="relative">
           <input
             type="file"
             onChange={handleFileChange}
-            accept=".pdf,.docx,.ppt,.pptx,.png,.jpg,.jpeg"
+            accept=".pdf,.docx,.ppt,.pptx,.txt,.png,.jpg,.jpeg"
             className="hidden"
             id="file-input"
             disabled={loading}
