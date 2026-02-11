@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Smooth transitions */
+@layer components {
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .card-base {
+    @apply rounded-lg border border-neutral-200 bg-white shadow-sm;
+  }
+
+  .btn-primary {
+    @apply rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply rounded-lg border border-neutral-300 bg-white px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-50 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply rounded-lg px-4 py-2 font-medium text-neutral-700 hover:bg-neutral-100 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .heading-1 {
+    @apply text-4xl font-bold tracking-tight text-neutral-900;
+  }
+
+  .heading-2 {
+    @apply text-3xl font-bold tracking-tight text-neutral-900;
+  }
+
+  .heading-3 {
+    @apply text-2xl font-bold tracking-tight text-neutral-900;
+  }
+
+  .text-muted {
+    @apply text-neutral-500;
+  }
+
+  .input-base {
+    @apply w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm placeholder:text-neutral-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-smooth;
+  }
+}
