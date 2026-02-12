@@ -18,6 +18,9 @@ interface StoryWithRelations {
     };
     section: {
         title: string | null;
+        document: {
+            id: string;
+        };
     };
 }
 
@@ -52,7 +55,7 @@ export default async function StoriesPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {stories.map((story) => (
-                        <Link key={story.id} href={`/dashboard/subject/${story.subjectId}/section/${story.sectionId}`}>
+                        <Link key={story.id} href={`/dashboard/subject/${story.subjectId}/document/${story.section.document.id}`}>
                             <GlassPanel className="h-full hover:scale-[1.02] transition-all duration-200 group cursor-pointer relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="p-6 space-y-4">

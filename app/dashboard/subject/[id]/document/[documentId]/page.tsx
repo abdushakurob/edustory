@@ -24,7 +24,7 @@ export default async function DocumentPage({
       <header className="border-b border-white/10 bg-glass-surface/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <Link
-            href={`/subject/${params.id}`}
+            href={`/dashboard/subject/${params.id}`}
             className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors mb-4 text-sm font-medium"
           >
             <ArrowLeft size={16} />

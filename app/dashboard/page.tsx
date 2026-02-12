@@ -29,7 +29,7 @@ export default async function DashboardPage() {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-8">
         <div>
-        <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
+          <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
             Welcome back, {session.name || "there"}
           </h1>
           <p className="text-neutral-500 mt-1">
@@ -63,7 +63,7 @@ export default async function DashboardPage() {
                 {recentDocuments.map((doc) => (
                   <Link
                     key={doc.id}
-                    href={`/subject/${doc.subjectId}/document/${doc.id}`}
+                    href={`/dashboard/subject/${doc.subjectId}/document/${doc.id}`}
                   >
                     <GlassPanel
                       hoverEffect
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
             {subjects.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {subjects.map((subject) => (
-                  <Link key={subject.id} href={`/subject/${subject.id}`}>
+                  <Link key={subject.id} href={`/dashboard/subject/${subject.id}`}>
                     <GlassPanel
                       hoverEffect
                       className="p-5 flex flex-col gap-4 cursor-pointer h-full"

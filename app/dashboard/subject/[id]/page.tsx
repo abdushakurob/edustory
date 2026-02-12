@@ -88,7 +88,7 @@ export default async function SubjectPage({
                 {documents.map((doc: any) => (
                   <Link
                     key={doc.id}
-                    href={`/subject/${params.id}/document/${doc.id}`}
+                    href={`/dashboard/subject/${params.id}/document/${doc.id}`}
                     className="block group"
                   >
                     <GlassPanel hoverEffect className="p-5 transition-all">
