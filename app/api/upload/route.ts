@@ -30,6 +30,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate size (4.5MB limit for Vercel/Lambda)
+    if (file.size > 4.5 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "File size exceeds the 4.5MB limit" },
+        { status: 400 }
+      );
+    }
+
     // Validate file type
     if (!validateFileType(file.name)) {
       return NextResponse.json(

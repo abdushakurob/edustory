@@ -20,6 +20,10 @@ export function FileUpload({ subjectId, onSuccess }: FileUploadProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
+      if (selectedFile.size > 4.5 * 1024 * 1024) {
+        toast.error("File size must be less than 4.5MB");
+        return;
+      }
       setFile(selectedFile);
       setTitle(selectedFile.name.split(".")[0]);
     }

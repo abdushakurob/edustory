@@ -19,6 +19,11 @@ export default async function SubjectPage({
   }
 
   const subject = await getSubject(params.id);
+
+  if (!subject) {
+    redirect("/dashboard");
+  }
+
   const documents = await getDocuments(params.id);
 
   return (
