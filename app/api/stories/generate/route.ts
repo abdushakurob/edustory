@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { sectionId, subjectId } = await request.json();
+    const { sectionId, subjectId, userFeedback } = await request.json();
 
     if (!sectionId || !subjectId) {
       return NextResponse.json(
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const story = await generateSectionStory(sectionId, subjectId);
+    const story = await generateSectionStory(sectionId, subjectId, userFeedback);
 
     return NextResponse.json({ success: true, story }, { status: 201 });
   } catch (error) {

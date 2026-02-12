@@ -41,6 +41,7 @@ export async function createStory(
 export async function generateSectionStory(
   sectionId: string,
   subjectId: string,
+  userFeedback?: string,
 ) {
   const session = await getSession();
   if (!session) throw new Error("Unauthorized");
@@ -65,16 +66,25 @@ export async function generateSectionStory(
     where: { sectionId },
   });
 
-  if (existingStory) {
+  // If story exists and no feedback, return existing
+  if (existingStory && !userFeedback) {
     return existingStory;
   }
 
-  // Generate story from section content
+  // If feedback provided, delete existing story to regenerate
+  if (existingStory && userFeedback) {
+    await prisma.story.delete({
+      where: { sectionId },
+    });
+  }
+
+  // Generate story from section content (with optional feedback)
   const story = await generateStory(
     section.content,
     subject.title,
     subject.theme,
     section.title || undefined,
+    userFeedback,
   );
 
   return await createStory(

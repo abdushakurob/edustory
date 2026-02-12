@@ -78,6 +78,7 @@ export async function generateStory(
   subject: string,
   theme: string,
   section?: string,
+  userFeedback?: string,
 ): Promise<StoryContent> {
   const systemPrompt = buildSystemPrompt(subject, theme);
 
@@ -95,7 +96,9 @@ ${section ? `Section: ${section}` : ""}
 
 TASK: Create an ABSTRACT STORY that explains the core concepts from this content.
 
-Do NOT simply convert the text. Instead:
+${userFeedback ? `USER PREFERENCE: The reader has specifically requested: "${userFeedback}". Adjust the story style, setting, characters, or approach to match this preference while keeping the educational content accurate.
+
+` : ""}Do NOT simply convert the text. Instead:
 1. Identify the 3-5 KEY CONCEPTS in the content
 2. Create a coherent narrative story set in Nigeria that DEMONSTRATES these concepts through action and dialogue
 3. Use characters, situations, and dialogue to show (not tell) how these concepts work in real life
