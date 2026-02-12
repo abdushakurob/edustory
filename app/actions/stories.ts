@@ -305,3 +305,31 @@ export async function getAnswerHistory(subjectId: string) {
     orderBy: { createdAt: "desc" },
   });
 }
+export async function getAllStories() {
+  const session = await getSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const stories = await prisma.story.findMany({
+    where: {
+      subject: {
+        userId: session.userId,
+      },
+    },
+    include: {
+      subject: true,
+      section: {
+        include: {
+          document: true,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+
+  return stories.map((story) => ({
+    ...story,
+    keyPoints: JSON.parse(story.keyPoints),
+  }));
+}
