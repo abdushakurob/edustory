@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { chunkText } from "@/lib/file/extraction";
-import { createSection } from "@/app/actions/documents";
 import prisma from "@/lib/db";
 
 export async function POST(request: NextRequest) {
@@ -42,7 +41,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if there's extracted text to work with
-        if (!document.extractedText || document.extractedText.trim().length === 0) {
+        if (
+            !document.extractedText ||
+            document.extractedText.trim().length === 0
+        ) {
             return NextResponse.json(
                 {
                     error:
@@ -59,7 +61,7 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Re-chunk and create sections
+        // Re-chunk and create sections directly via Prisma
         const chunks = chunkText(document.extractedText, 1500);
 
         if (chunks.length === 0) {
@@ -72,15 +74,17 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const sections = await Promise.all(
+        const sections = await prisma.$transaction(
             chunks.map((chunk, index) =>
-                createSection(
-                    document.id,
-                    `Section ${index + 1}`,
-                    chunk,
-                    index + 1,
-                    index,
-                ),
+                prisma.section.create({
+                    data: {
+                        documentId: document.id,
+                        title: `Section ${index + 1}`,
+                        content: chunk,
+                        sectionNumber: index + 1,
+                        order: index,
+                    },
+                }),
             ),
         );
 
