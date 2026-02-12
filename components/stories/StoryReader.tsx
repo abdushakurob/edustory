@@ -138,7 +138,6 @@ export function StoryReader({ narrative }: StoryReaderProps) {
     setIsPlaying(false);
   };
 
-  const currentVoice = VOICES.find((v) => v.name === selectedVoice);
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
@@ -164,8 +163,8 @@ export function StoryReader({ narrative }: StoryReaderProps) {
                   key={voice.name}
                   onClick={() => handleVoiceChange(voice.name)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedVoice === voice.name
-                      ? "bg-blue-50 text-blue-700"
-                      : "hover:bg-neutral-50 text-neutral-700"
+                    ? "bg-blue-50 text-blue-700"
+                    : "hover:bg-neutral-50 text-neutral-700"
                     }`}
                 >
                   <span className="font-medium">{voice.name}</span>
@@ -183,8 +182,8 @@ export function StoryReader({ narrative }: StoryReaderProps) {
                   key={voice.name}
                   onClick={() => handleVoiceChange(voice.name)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedVoice === voice.name
-                      ? "bg-blue-50 text-blue-700"
-                      : "hover:bg-neutral-50 text-neutral-700"
+                    ? "bg-blue-50 text-blue-700"
+                    : "hover:bg-neutral-50 text-neutral-700"
                     }`}
                 >
                   <span className="font-medium">{voice.name}</span>

@@ -8,19 +8,32 @@ import ReactMarkdown from "react-markdown";
 import { StoryReader } from "./StoryReader";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 
+interface ExistingStory {
+  id: string;
+  narrative: string;
+  keyPoints: string | string[];
+  summary?: string;
+}
+
 interface StoryGeneratorProps {
   sectionId: string;
   subjectId: string;
+  existingStory?: ExistingStory;
+  previousStoryNarrative?: string;
   onGenerated?: () => void;
 }
 
 export function StoryGenerator({
   sectionId,
   subjectId,
+  existingStory,
+  previousStoryNarrative,
   onGenerated,
 }: StoryGeneratorProps) {
   const [loading, setLoading] = useState(false);
-  const [story, setStory] = useState<any>(null);
+  const [story, setStory] = useState<ExistingStory | null>(
+    existingStory || null,
+  );
   const [feedback, setFeedback] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
   const router = useRouter();
@@ -35,6 +48,7 @@ export function StoryGenerator({
           sectionId,
           subjectId,
           ...(userFeedback ? { userFeedback } : {}),
+          ...(previousStoryNarrative ? { previousStoryNarrative } : {}),
         }),
       });
 
@@ -68,6 +82,11 @@ export function StoryGenerator({
   };
 
   if (story) {
+    const keyPoints =
+      typeof story.keyPoints === "string"
+        ? JSON.parse(story.keyPoints)
+        : story.keyPoints;
+
     return (
       <GlassPanel className="p-6 space-y-4">
         <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -137,16 +156,13 @@ export function StoryGenerator({
             {story.narrative}
           </ReactMarkdown>
 
-          {story.keyPoints && (
+          {keyPoints && keyPoints.length > 0 && (
             <div className="mt-6 pt-6 border-t border-glass-border/50 space-y-3">
               <h4 className="font-semibold text-neutral-900 text-base">
                 Key Points:
               </h4>
               <ul className="list-disc list-inside space-y-2">
-                {(typeof story.keyPoints === "string"
-                  ? JSON.parse(story.keyPoints)
-                  : story.keyPoints
-                ).map((point: string, idx: number) => (
+                {keyPoints.map((point: string, idx: number) => (
                   <li key={idx} className="text-neutral-700">
                     {point}
                   </li>
@@ -164,7 +180,8 @@ export function StoryGenerator({
                 What kind of story would you prefer?
               </label>
               <p className="text-xs text-neutral-500">
-                e.g. "Set it in a Lagos market", "Make it about university students", "Use a more humorous tone"
+                e.g. "Set it in a Lagos market", "Make it about university
+                students", "Use a more humorous tone"
               </p>
               <div className="flex gap-2">
                 <input
@@ -172,7 +189,8 @@ export function StoryGenerator({
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && feedback.trim()) handleRegenerate();
+                    if (e.key === "Enter" && feedback.trim())
+                      handleRegenerate();
                   }}
                   placeholder="Describe what you'd like..."
                   className="flex-1 px-4 py-2.5 bg-white/60 border border-neutral-200 rounded-lg text-sm focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all"

@@ -79,6 +79,7 @@ export async function generateStory(
   theme: string,
   section?: string,
   userFeedback?: string,
+  previousStoryNarrative?: string,
 ): Promise<StoryContent> {
   const systemPrompt = buildSystemPrompt(subject, theme);
 
@@ -94,6 +95,9 @@ ${content}
 
 ${section ? `Section: ${section}` : ""}
 
+${previousStoryNarrative ? `PREVIOUS SECTION'S STORY (for continuity — you may continue with the same characters, setting, or narrative thread if it makes sense. If the topic is very different, start a fresh story instead):
+"""${previousStoryNarrative.substring(0, 600)}"""` : ""}
+
 TASK: Create an ABSTRACT STORY that explains the core concepts from this content.
 
 ${userFeedback ? `USER PREFERENCE: The reader has specifically requested: "${userFeedback}". Adjust the story style, setting, characters, or approach to match this preference while keeping the educational content accurate.
@@ -107,17 +111,19 @@ ${userFeedback ? `USER PREFERENCE: The reader has specifically requested: "${use
 
 Create a JSON response with this exact structure:
 {
-  "narrative": "A compelling abstract story (3-4 paragraphs) set in Nigeria with relatable characters and situations that naturally demonstrate and explain the core concepts. It should feel like a short story, not a lesson. Readers should learn the concepts through the narrative itself.",
-  "keyPoints": ["Core concept 1 extracted from story", "Core concept 2 extracted from story", "Core concept 3 extracted from story"],
-  "summary": "One sentence that states the main concept demonstrated by the story"
+  "narrative": "A compelling, CONCISE story (2-3 short paragraphs, MAXIMUM 1800 characters total) set in Nigeria. Keep it tight and impactful. No filler. Every sentence should matter.",
+  "keyPoints": ["Core concept 1", "Core concept 2", "Core concept 3"],
+  "summary": "One sentence summary"
 }
 
 CRITICAL INSTRUCTIONS:
+- KEEP THE NARRATIVE UNDER 1800 CHARACTERS. This is essential for text-to-speech compatibility.
 - Create a STORY, not a summary or explanation
 - The concepts should be embedded in the narrative, not stated directly
 - Use dialogue, action, and conflict to show concepts in practice
 - Make Nigerian characters and settings authentic and specific
 - Only draw concepts from the provided content
+- Do NOT use emojis
 - Make it engaging enough that someone would want to read it again`;
 
   try {

@@ -58,7 +58,7 @@ export default async function DocumentPage({
         <main className="max-w-4xl mx-auto px-6 py-12">
           <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center space-y-4">
             <div className="w-16 h-16 mx-auto bg-amber-100 rounded-full flex items-center justify-center">
-              <span className="text-3xl">📄</span>
+              <ArrowLeft size={24} className="text-amber-600" />
             </div>
             <h2 className="text-xl font-semibold text-neutral-900">
               No sections found

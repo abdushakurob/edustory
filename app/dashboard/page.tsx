@@ -69,9 +69,8 @@ export default async function DashboardPage() {
                       hoverEffect
                       className="p-4 flex items-center gap-4 cursor-pointer group"
                     >
-                      <div className="w-16 h-16 rounded-xl bg-blue-50/50 flex items-center justify-center text-2xl shadow-sm border border-white/50">
-                        {doc.title.includes("Bio") ? "🧬" :
-                          doc.title.includes("Phys") ? "⚛️" : "📄"}
+                      <div className="w-16 h-16 rounded-xl bg-blue-50/50 flex items-center justify-center text-sm font-bold text-blue-600 shadow-sm border border-white/50">
+                        {doc.title.substring(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-neutral-900 group-hover:text-primary transition-colors truncate">

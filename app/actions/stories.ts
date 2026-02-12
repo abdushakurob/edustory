@@ -42,6 +42,7 @@ export async function generateSectionStory(
   sectionId: string,
   subjectId: string,
   userFeedback?: string,
+  previousStoryNarrative?: string,
 ) {
   const session = await getSession();
   if (!session) throw new Error("Unauthorized");
@@ -85,6 +86,7 @@ export async function generateSectionStory(
     subject.theme,
     section.title || undefined,
     userFeedback,
+    previousStoryNarrative,
   );
 
   return await createStory(

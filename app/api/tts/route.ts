@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                text: text.substring(0, 5000), // Limit text length
+                text: text.substring(0, 2000), // YarnGPT limit is 2000 chars
                 voice,
                 response_format: "mp3",
             }),
