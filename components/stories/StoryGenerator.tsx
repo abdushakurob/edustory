@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { StoryReader } from "./StoryReader";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 
 interface StoryGeneratorProps {
   sectionId: string;
@@ -53,7 +54,7 @@ export function StoryGenerator({
 
   if (story) {
     return (
-      <div className="card-base p-6 space-y-4">
+      <GlassPanel className="p-6 space-y-4">
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-lg font-semibold text-neutral-900">Story</h3>
           <StoryReader
@@ -120,7 +121,7 @@ export function StoryGenerator({
             {story.narrative}
           </ReactMarkdown>
           {story.keyPoints && (
-            <div className="mt-6 pt-6 border-t border-neutral-200 space-y-3">
+            <div className="mt-6 pt-6 border-t border-glass-border/50 space-y-3">
               <h4 className="font-semibold text-neutral-900 text-base">
                 Key Points:
               </h4>
@@ -137,7 +138,7 @@ export function StoryGenerator({
             </div>
           )}
         </div>
-      </div>
+      </GlassPanel>
     );
   }
 
@@ -145,7 +146,7 @@ export function StoryGenerator({
     <button
       onClick={handleGenerate}
       disabled={loading}
-      className="btn-primary w-full flex items-center justify-center gap-2"
+      className="glass-button w-full flex items-center justify-center gap-2 py-3"
     >
       {loading ? (
         <>

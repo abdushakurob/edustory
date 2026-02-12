@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 
 interface QuestionGeneratorProps {
   sectionId: string;
@@ -67,7 +68,7 @@ export function QuestionGenerator({
 
   if (questions.length > 0) {
     return (
-      <div className="card-base p-6 space-y-4">
+      <GlassPanel className="p-6 space-y-4">
         <h3 className="text-lg font-semibold text-neutral-900">
           Practice Questions ({questions.length})
         </h3>
@@ -75,7 +76,7 @@ export function QuestionGenerator({
           {questions.map((q, idx) => (
             <div
               key={q.id}
-              className="p-4 bg-neutral-50 rounded-lg border border-neutral-200"
+              className="p-4 bg-white/40 rounded-lg border border-white/50 backdrop-blur-sm"
             >
               <p className="font-semibold text-neutral-900 text-base mb-3">
                 {idx + 1}. {q.questionText}
@@ -88,7 +89,7 @@ export function QuestionGenerator({
                   ).map((opt: string, i: number) => (
                     <div
                       key={i}
-                      className="flex items-start gap-3 p-2 rounded hover:bg-neutral-100 cursor-pointer transition-colors"
+                      className="flex items-start gap-3 p-2 rounded hover:bg-white/50 cursor-pointer transition-colors"
                     >
                       <span className="font-medium text-neutral-700 min-w-fit">
                         {String.fromCharCode(65 + i)})
@@ -99,7 +100,7 @@ export function QuestionGenerator({
                 </div>
               )}
               {q.explanation && (
-                <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200 text-sm text-blue-900">
+                <div className="mt-3 p-3 bg-blue-50/50 rounded border border-blue-200/50 text-sm text-blue-900 backdrop-blur-sm">
                   <p className="font-medium mb-1">Explanation:</p>
                   <p>{q.explanation}</p>
                 </div>
@@ -107,7 +108,7 @@ export function QuestionGenerator({
             </div>
           ))}
         </div>
-      </div>
+      </GlassPanel>
     );
   }
 
@@ -115,7 +116,7 @@ export function QuestionGenerator({
     <button
       onClick={handleGenerate}
       disabled={loading}
-      className="btn-primary w-full flex items-center justify-center gap-2"
+      className="glass-button w-full flex items-center justify-center gap-2 py-3"
     >
       {loading ? (
         <>

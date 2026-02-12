@@ -7,6 +7,7 @@ import {
   ProgressStepper,
   SectionNavigator,
 } from "@/components/progress/ProgressStepper";
+import { GlassPanel } from "@/components/ui/GlassPanel";
 
 interface Section {
   id: string;
@@ -16,13 +17,11 @@ interface Section {
 }
 
 interface DocumentClientProps {
-  document: any;
   subjectId: string;
   sections: Section[];
 }
 
 export default function DocumentClient({
-  document,
   subjectId,
   sections,
 }: DocumentClientProps) {
@@ -34,6 +33,12 @@ export default function DocumentClient({
   const currentSection = sections[currentIndex];
   const isFirstSection = currentIndex === 0;
   const isLastSection = currentIndex === sections.length - 1;
+
+  // Transform sections to match ProgressStepper requirements (ensure title is string)
+  const stepperSections = sections.map(s => ({
+    ...s,
+    title: s.title || `Section ${s.sectionNumber}`
+  }));
 
   const handleNext = () => {
     if (!isLastSection) {
@@ -62,7 +67,7 @@ export default function DocumentClient({
     <>
       {/* Progress Stepper */}
       <ProgressStepper
-        sections={sections}
+        sections={stepperSections}
         currentIndex={currentIndex}
         onSectionChange={handleSectionChange}
         completedSections={completedSections}
@@ -70,13 +75,13 @@ export default function DocumentClient({
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-12">
-        <div className="card-base p-8 md:p-10">
+        <GlassPanel className="p-8 md:p-10 backdrop-blur-2xl">
           {/* Section Header */}
           <div className="mb-8">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm">
+                  <span className="inline-flex items-center justify-center w-10 h-10 bg-blue-100/50 text-blue-600 rounded-full font-semibold text-sm backdrop-blur-sm border border-blue-200/50">
                     {currentIndex + 1}
                   </span>
                   <h2 className="heading-3">
@@ -92,9 +97,9 @@ export default function DocumentClient({
 
             {/* Progress Indicator */}
             <div className="flex items-center gap-2 text-sm text-neutral-600">
-              <div className="flex-1 bg-neutral-200 rounded-full h-1">
+              <div className="flex-1 bg-neutral-200/50 rounded-full h-1">
                 <div
-                  className="bg-blue-600 h-1 rounded-full transition-all duration-300"
+                  className="bg-blue-600 h-1 rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(37,99,235,0.3)]"
                   style={{
                     width: `${((currentIndex + 1) / sections.length) * 100}%`,
                   }}
@@ -109,7 +114,7 @@ export default function DocumentClient({
           {/* Content Sections */}
           <div className="space-y-8">
             {/* Original Content */}
-            <div className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200">
+            <div className="p-6 bg-gradient-to-br from-amber-50/50 to-orange-50/50 rounded-xl border border-amber-200/50 backdrop-blur-sm">
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-2xl">📄</span>
                 <h3 className="font-semibold text-neutral-900">
@@ -152,7 +157,7 @@ export default function DocumentClient({
               />
             </div>
           </div>
-        </div>
+        </GlassPanel>
 
         {/* Navigation */}
         <SectionNavigator
@@ -166,7 +171,7 @@ export default function DocumentClient({
 
         {/* Footer Message */}
         {isLastSection && completedSections.size === sections.length && (
-          <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200 text-center">
+          <div className="mt-8 p-6 bg-gradient-to-r from-green-50/50 to-emerald-50/50 rounded-lg border border-green-200/50 text-center backdrop-blur-sm">
             <h3 className="text-lg font-semibold text-green-900 mb-2">
               🎉 Congratulations!
             </h3>

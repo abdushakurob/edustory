@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { getDocument } from "@/app/actions/documents";
-import { StoryGenerator } from "@/components/stories/StoryGenerator";
-import { QuestionGenerator } from "@/components/stories/QuestionGenerator";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import DocumentClient from "./DocumentClient";
@@ -21,20 +19,20 @@ export default async function DocumentPage({
   const document = await getDocument(params.documentId);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="bg-white border-b border-neutral-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-6">
+      <header className="border-b border-white/10 bg-glass-surface/30 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-6 py-4">
           <Link
             href={`/subject/${params.id}`}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-4"
+            className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors mb-4 text-sm font-medium"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
             Back to Subject
           </Link>
-          <h1 className="heading-2">{document.title}</h1>
-          <p className="text-neutral-600 mt-2">
-            Learn through engaging stories and practice questions
+          <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">{document.title}</h1>
+          <p className="text-neutral-500 mt-2">
+            Interactive Story Mode
           </p>
         </div>
       </header>
