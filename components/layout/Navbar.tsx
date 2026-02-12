@@ -6,10 +6,10 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-bold">
-                        S
+                        E
                     </div>
                     <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-emerald-600">
-                        StoryMind
+                        Edustory
                     </span>
                 </div>
 

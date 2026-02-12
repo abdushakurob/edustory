@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 * {
   @apply border-border;
@@ -24,8 +22,8 @@ code {
 @layer base {
   body {
     @apply bg-background text-foreground tracking-tight antialiased;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%), 
+    background-image:
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
       radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
     background-attachment: fixed;
   }
@@ -35,7 +33,7 @@ code {
   .glass-panel {
     @apply bg-glass-surface/60 backdrop-blur-xl border border-glass-border/50 shadow-glass rounded-lg;
   }
-  
+
   .glass-button {
     @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm transition-all duration-200 rounded-lg font-medium;
   }
@@ -46,6 +44,7 @@ code {
 }
 
 @layer components {
+
   /* Reusable Component Classes */
   .heading-1 {
     @apply text-4xl font-bold tracking-tight text-neutral-900;

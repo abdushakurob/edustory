@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "StoryMind AI - Smart Learning",
+  title: "Edustory AI - Smart Learning",
   description:
     "Transform your documents into engaging learning stories with AI",
 };

@@ -18,7 +18,7 @@ export default function LoginPage() {
             Turn your documents into <span className="text-blue-400">interactive stories</span>.
           </h2>
           <p className="text-lg text-neutral-400 leading-relaxed">
-            Join thousands of students who are learning faster and retaining more with StoryMind's AI-powered narrative generation.
+            Join thousands of students who are learning faster and retaining more with Edustory's AI-powered narrative generation.
           </p>
 
           <div className="mt-12 flex items-center gap-4 text-sm text-neutral-500 font-medium">

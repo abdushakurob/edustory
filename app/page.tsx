@@ -20,7 +20,7 @@ export default function Home() {
           </h1>
 
           <p className="text-xl text-neutral-500 max-w-2xl mx-auto leading-relaxed">
-            StoryMind transforms dry academic papers, PDFs, and lecture notes into
+            Edustory transforms dry academic papers, PDFs, and lecture notes into
             engaging narratives, helping you learn faster and retain more.
           </p>
 
@@ -55,7 +55,7 @@ export default function Home() {
       <section className="py-24 px-6 bg-neutral-50/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">How StoryMind Works</h2>
+            <h2 className="text-3xl font-bold text-neutral-900 mb-4">How Edustory Works</h2>
             <p className="text-neutral-500 max-w-lg mx-auto">Three simple steps to transform your learning experience.</p>
           </div>
 
