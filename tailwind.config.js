@@ -50,6 +50,9 @@ module.exports = {
       backdropBlur: {
         xs: "2px",
       },
+      fontFamily: {
+        sans: ["var(--font-outfit)", "ui-sans-serif", "system-ui"],
+      },
     },
   },
   plugins: [],

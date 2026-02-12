@@ -38,7 +38,6 @@ export default async function DocumentPage({
       </header>
 
       <DocumentClient
-        document={document}
         subjectId={params.id}
         sections={document.sections}
       />
