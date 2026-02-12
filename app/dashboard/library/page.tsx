@@ -80,7 +80,7 @@ export default async function LibraryPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {subject.documents.map((doc) => (
-                                    <Link key={doc.id} href={`/dashboard/subject/${subject.id}`}>
+                                    <Link key={doc.id} href={`/dashboard/subject/${subject.id}/document/${doc.id}`}>
                                         <GlassPanel className="p-4 hover:border-blue-200 transition-colors cursor-pointer flex items-start gap-3">
                                             <div className="p-2 rounded-lg bg-neutral-50 text-neutral-400">
                                                 <FileText className="w-4 h-4" />
