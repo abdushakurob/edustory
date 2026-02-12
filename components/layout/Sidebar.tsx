@@ -14,17 +14,20 @@ const navigation = [
 ];
 
 interface User {
-    name: string;
-    email: string;
+    name?: string | null;
+    email?: string | null;
     image?: string | null;
 }
 
 interface SidebarProps {
-    user: User;
+    user?: User | null;
 }
 
 export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
+    const displayName = user?.name?.trim() || user?.email?.split("@")[0] || "User";
+    const displayEmail = user?.email || "";
+    const initial = displayName.charAt(0).toUpperCase();
 
     return (
         <div className="w-64 h-screen fixed left-0 top-0 flex flex-col border-r border-neutral-200 bg-white/80 backdrop-blur-xl z-50">
@@ -63,13 +66,13 @@ export function Sidebar({ user }: SidebarProps) {
             <div className="p-4 border-t border-neutral-200">
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-emerald-500 flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                        {user.name.charAt(0)}
+                        {initial}
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-neutral-900 truncate group-hover:text-blue-600 transition-colors">
-                            {user.name}
+                            {displayName}
                         </p>
-                        <p className="text-xs text-neutral-500 truncate">{user.email}</p>
+                        <p className="text-xs text-neutral-500 truncate">{displayEmail}</p>
                     </div>
                 </div>
             </div>

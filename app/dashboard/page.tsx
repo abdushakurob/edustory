@@ -29,8 +29,8 @@ export default async function DashboardPage() {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
-            Welcome back, {session.name}
+        <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
+            Welcome back, {session.name || "there"}
           </h1>
           <p className="text-neutral-500 mt-1">
             Continue where you left off or start a new story.
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
                     >
                       <div className="flex justify-between items-start">
                         <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-lg">
-                          {subject.title.charAt(0)}
+                          {(subject.title || "S").charAt(0)}
                         </div>
                         <div className="px-2 py-1 rounded-full bg-neutral-100 text-xs font-medium text-neutral-500">
                           {subject.documents.length} docs
