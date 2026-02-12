@@ -30,6 +30,16 @@ export default function DocumentClient({
     new Set(),
   );
 
+  if (!sections || sections.length === 0) {
+    return (
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="text-center text-neutral-500">
+          <p className="text-lg">No sections available yet.</p>
+        </div>
+      </main>
+    );
+  }
+
   const currentSection = sections[currentIndex];
   const isFirstSection = currentIndex === 0;
   const isLastSection = currentIndex === sections.length - 1;

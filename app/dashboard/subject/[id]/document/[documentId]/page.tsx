@@ -16,7 +16,12 @@ export default async function DocumentPage({
     redirect("/login");
   }
 
-  const document = await getDocument(params.documentId);
+  let document;
+  try {
+    document = await getDocument(params.documentId);
+  } catch {
+    redirect(`/dashboard/subject/${params.id}`);
+  }
 
   if (!document) {
     redirect(`/dashboard/subject/${params.id}`);
@@ -41,10 +46,19 @@ export default async function DocumentPage({
         </div>
       </header>
 
-      <DocumentClient
-        subjectId={params.id}
-        sections={document.sections}
-      />
+      {document.sections && document.sections.length > 0 ? (
+        <DocumentClient
+          subjectId={params.id}
+          sections={document.sections}
+        />
+      ) : (
+        <main className="max-w-4xl mx-auto px-6 py-12">
+          <div className="text-center text-neutral-500">
+            <p className="text-lg">No sections found for this document.</p>
+            <p className="text-sm mt-2">The document may still be processing.</p>
+          </div>
+        </main>
+      )}
     </div>
   );
 }
