@@ -1,4 +1,3 @@
-import { updateProfile } from "@/app/actions/users";
 import { getSession } from "@/lib/auth/session";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { redirect } from "next/navigation";

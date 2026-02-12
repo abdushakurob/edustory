@@ -6,6 +6,7 @@ import { verifyToken } from "./jwt";
 export interface AuthSession {
   userId: string;
   email: string;
+  name?: string | null;
 }
 
 export async function getSession(): Promise<AuthSession | null> {

@@ -4,8 +4,25 @@ import { BookOpen, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 
+interface StoryWithRelations {
+    id: string;
+    subjectId: string;
+    sectionId: string;
+    narrative: string;
+    keyPoints: unknown;
+    summary: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    subject: {
+        title: string;
+    };
+    section: {
+        title: string | null;
+    };
+}
+
 export default async function StoriesPage() {
-    const stories = await getAllStories();
+    const stories = (await getAllStories()) as unknown as StoryWithRelations[];
 
     return (
         <div className="space-y-8">

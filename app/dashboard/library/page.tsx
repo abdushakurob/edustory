@@ -1,12 +1,25 @@
 import { getSubjects } from "@/app/actions/subjects";
 import { GlassPanel } from "@/components/ui/GlassPanel";
-import { Library, Folder, FileText, Plus, BookOpen, Clock } from "lucide-react";
+import { Library, Folder, FileText, Plus } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { CreateSubjectModal } from "@/components/dashboard/CreateSubjectModal";
 
+interface Document {
+    id: string;
+    title: string;
+    createdAt: Date;
+}
+
+interface SubjectWithDocs {
+    id: string;
+    title: string;
+    updatedAt: Date;
+    documents: Document[];
+}
+
 export default async function LibraryPage() {
-    const subjects = await getSubjects();
+    const subjects = (await getSubjects()) as unknown as SubjectWithDocs[];
 
     return (
         <div className="space-y-8">
