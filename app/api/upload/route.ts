@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { saveUploadedFile, validateFileType } from "@/lib/file/storage";
-import { chunkText, cleanText } from "@/lib/file/extraction";
-import { extractDocumentText } from "@/lib/ai/gemini";
-import { createDocument, createSection } from "@/app/actions/documents";
+import { analyzeDocument } from "@/lib/ai/gemini";
+import { createDocument } from "@/app/actions/documents";
+import { prisma } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,21 +43,12 @@ export async function POST(request: NextRequest) {
     // Save file
     const filePath = await saveUploadedFile(file, file.name, subjectId);
     const fileType = file.name.split(".").pop()?.toLowerCase() || "unknown";
-
-    // Extract text using Gemini LLM for all file types
     const buffer = Buffer.from(await file.arrayBuffer());
-    let extractedText = "";
 
-    try {
-      extractedText = await extractDocumentText(buffer, fileType, file.name);
-    } catch (extractionError) {
-      console.error("Text extraction failed:", extractionError);
-      // Still create the document record even if extraction fails
-    }
+    // Send the raw document to Gemini — it can read PDFs, images, etc. directly
+    const analysis = await analyzeDocument(buffer, fileType, file.name);
 
-    extractedText = cleanText(extractedText);
-
-    // Create document
+    // Create document record with full text from Gemini
     const document = await createDocument(
       subjectId,
       title,
@@ -65,36 +56,30 @@ export async function POST(request: NextRequest) {
       fileType,
       filePath,
       file.size,
-      extractedText,
+      analysis.fullText,
     );
 
-    // Create sections from chunks
-    let sectionsCount = 0;
-    if (extractedText.length > 0) {
-      const chunks = chunkText(extractedText, 1500);
-      const sections = await Promise.all(
-        chunks.map((chunk, index) =>
-          createSection(
-            document.id,
-            `Section ${index + 1}`,
-            chunk,
-            index + 1,
-            index,
-          ),
-        ),
-      );
-      sectionsCount = sections.length;
-    }
+    // Create sections directly from Gemini's intelligent analysis
+    const sections = await prisma.$transaction(
+      analysis.sections.map((section, index) =>
+        prisma.section.create({
+          data: {
+            documentId: document.id,
+            title: section.title,
+            content: section.content,
+            sectionNumber: index + 1,
+            order: index,
+          },
+        }),
+      ),
+    );
 
     return NextResponse.json(
       {
         success: true,
         document,
-        sections: sectionsCount,
-        message:
-          sectionsCount > 0
-            ? `Document uploaded and split into ${sectionsCount} sections`
-            : "Document uploaded but text extraction returned empty. You can retry processing from the document page.",
+        sections: sections.length,
+        message: `Document analyzed and split into ${sections.length} learning sections`,
       },
       { status: 201 },
     );

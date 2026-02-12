@@ -307,16 +307,21 @@ export async function extractImageText(imageData: Buffer): Promise<string> {
   }
 }
 
+export interface DocumentSection {
+  title: string;
+  content: string;
+}
+
 /**
- * Extract text from any document type using Gemini.
- * Sends the raw file to the LLM for text extraction.
+ * Send a raw document to Gemini and have it analyze + split into
+ * logical learning sections. Gemini is multimodal — it can read
+ * PDFs, images, etc. directly without local text extraction.
  */
-export async function extractDocumentText(
+export async function analyzeDocument(
   buffer: Buffer,
   fileType: string,
   fileName: string,
-): Promise<string> {
-  // Map file extensions to MIME types that Gemini accepts
+): Promise<{ sections: DocumentSection[]; fullText: string }> {
   const mimeTypeMap: Record<string, string> = {
     pdf: "application/pdf",
     docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -339,24 +344,52 @@ export async function extractDocumentText(
         },
       },
       {
-        text: `Extract ALL text content from this ${fileType.toUpperCase()} file (${fileName}). 
+        text: `You are analyzing this document for an educational platform. Read the ENTIRE document carefully.
 
-Instructions:
-- Extract every piece of text content from the document
-- Preserve the structure: headings, paragraphs, lists, tables
-- For images/diagrams within the document, describe them in detail
-- For charts/graphs, describe the data they represent
-- Maintain the original order of content
-- Format the output as clean, readable plain text
-- Use line breaks to separate sections
-- Do NOT add commentary or analysis — just extract the raw content faithfully`,
+Your task: Break this document into logical LEARNING SECTIONS. Each section should cover one coherent topic or concept.
+
+Rules:
+- Create between 2 and 8 sections depending on document length
+- Each section should have a descriptive title
+- Each section's content should be the actual text/information from that part of the document
+- Preserve ALL information — do not summarize or skip any content
+- For diagrams/images, describe them in detail within the relevant section
+- Keep sections roughly similar in size
+
+Respond with ONLY valid JSON in this exact format:
+{
+  "sections": [
+    {
+      "title": "Descriptive title for this section",
+      "content": "The full text content of this section from the document..."
+    }
+  ],
+  "fullText": "The complete text content of the entire document combined"
+}`,
       },
     ]);
 
-    return result.response.text();
+    const text = result.response.text();
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+
+    if (!jsonMatch) {
+      throw new Error("Gemini did not return valid JSON");
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]);
+
+    if (!parsed.sections || !Array.isArray(parsed.sections) || parsed.sections.length === 0) {
+      throw new Error("Gemini returned no sections");
+    }
+
+    return {
+      sections: parsed.sections,
+      fullText: parsed.fullText || parsed.sections.map((s: DocumentSection) => s.content).join("\n\n"),
+    };
   } catch (error) {
-    console.error(`Error extracting text from ${fileName}:`, error);
+    console.error(`Error analyzing document ${fileName}:`, error);
     throw error;
   }
 }
+
 

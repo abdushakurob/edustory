@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
-import { chunkText } from "@/lib/file/extraction";
 import { prisma } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
@@ -19,7 +18,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Get the document with its extracted text
+        // Get the document
         const document = await prisma.document.findUnique({
             where: { id: documentId },
             include: {
@@ -48,39 +47,65 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 {
                     error:
-                        "No text content found in this document. The file may not contain extractable text. Try re-uploading the document.",
+                        "No content was found for this document. Please delete it and re-upload — Gemini will analyze the file directly.",
                 },
                 { status: 400 },
             );
         }
 
-        // Delete existing sections (if any) before recreating
+        // Delete existing sections before recreating
         if (document.sections.length > 0) {
             await prisma.section.deleteMany({
                 where: { documentId: document.id },
             });
         }
 
-        // Re-chunk and create sections
-        const chunks = chunkText(document.extractedText, 1500);
+        // Split the stored text into sections using simple logic
+        // (since we can't re-send the original file to Gemini from here)
+        const paragraphs = document.extractedText.split(/\n\n+/).filter((p) => p.trim().length > 50);
 
-        if (chunks.length === 0) {
+        if (paragraphs.length === 0) {
             return NextResponse.json(
                 {
                     error:
-                        "Could not split the document into sections. The extracted text may be too short.",
+                        "The stored text is too short to create sections. Try deleting and re-uploading the document.",
                 },
                 { status: 400 },
             );
         }
 
+        // Group paragraphs into sections of ~1500 chars
+        const sectionContents: { title: string; content: string }[] = [];
+        let currentContent = "";
+        let sectionIndex = 1;
+
+        for (const para of paragraphs) {
+            if (currentContent.length + para.length > 1500 && currentContent.length > 0) {
+                sectionContents.push({
+                    title: `Section ${sectionIndex}`,
+                    content: currentContent.trim(),
+                });
+                sectionIndex++;
+                currentContent = para;
+            } else {
+                currentContent += (currentContent ? "\n\n" : "") + para;
+            }
+        }
+
+        if (currentContent.trim().length > 0) {
+            sectionContents.push({
+                title: `Section ${sectionIndex}`,
+                content: currentContent.trim(),
+            });
+        }
+
         const sections = await prisma.$transaction(
-            chunks.map((chunk, index) =>
+            sectionContents.map((sec, index) =>
                 prisma.section.create({
                     data: {
                         documentId: document.id,
-                        title: `Section ${index + 1}`,
-                        content: chunk,
+                        title: sec.title,
+                        content: sec.content,
                         sectionNumber: index + 1,
                         order: index,
                     },
