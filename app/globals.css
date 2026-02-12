@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+  --color-border: #e2e8f0;
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-glass-surface: #ffffff;
+  --color-glass-border: #e2e8f0;
+  --shadow-glass: 0 12px 35px rgb(15 23 42 / 0.12);
+  --shadow-glass-sm: 0 6px 18px rgb(15 23 42 / 0.1);
+}
+
 * {
   @apply border-border;
 }
