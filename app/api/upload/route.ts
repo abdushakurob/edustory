@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { saveUploadedFile, validateFileType } from "@/lib/file/storage";
-import {
-  extractPdfText,
-  extractDocxText,
-  extractTextFile,
-  chunkText,
-  cleanText,
-} from "@/lib/file/extraction";
-import { extractImageText } from "@/lib/ai/gemini";
+import { chunkText, cleanText } from "@/lib/file/extraction";
+import { extractDocumentText } from "@/lib/ai/gemini";
 import { createDocument, createSection } from "@/app/actions/documents";
 
 export async function POST(request: NextRequest) {
@@ -34,7 +28,7 @@ export async function POST(request: NextRequest) {
     if (file.size > 4.5 * 1024 * 1024) {
       return NextResponse.json(
         { error: "File size exceeds the 4.5MB limit" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,22 +44,15 @@ export async function POST(request: NextRequest) {
     const filePath = await saveUploadedFile(file, file.name, subjectId);
     const fileType = file.name.split(".").pop()?.toLowerCase() || "unknown";
 
-    // Extract text based on file type
-    let extractedText = "";
+    // Extract text using Gemini LLM for all file types
     const buffer = Buffer.from(await file.arrayBuffer());
+    let extractedText = "";
 
-    if (fileType === "pdf") {
-      extractedText = await extractPdfText(buffer);
-    } else if (fileType === "docx") {
-      extractedText = await extractDocxText(buffer);
-    } else if (fileType === "txt") {
-      extractedText = await extractTextFile(buffer);
-    } else if (["png", "jpg", "jpeg"].includes(fileType)) {
-      extractedText = await extractImageText(buffer);
-    } else if (fileType === "ppt" || fileType === "pptx") {
-      // For now, just save as is - full PPT parsing requires additional library
-      extractedText =
-        "PowerPoint file uploaded. Content extraction coming soon.";
+    try {
+      extractedText = await extractDocumentText(buffer, fileType, file.name);
+    } catch (extractionError) {
+      console.error("Text extraction failed:", extractionError);
+      // Still create the document record even if extraction fails
     }
 
     extractedText = cleanText(extractedText);
@@ -82,25 +69,32 @@ export async function POST(request: NextRequest) {
     );
 
     // Create sections from chunks
-    const chunks = chunkText(extractedText, 1500);
-    const sections = await Promise.all(
-      chunks.map((chunk, index) =>
-        createSection(
-          document.id,
-          `Section ${index + 1}`,
-          chunk,
-          index + 1,
-          index,
+    let sectionsCount = 0;
+    if (extractedText.length > 0) {
+      const chunks = chunkText(extractedText, 1500);
+      const sections = await Promise.all(
+        chunks.map((chunk, index) =>
+          createSection(
+            document.id,
+            `Section ${index + 1}`,
+            chunk,
+            index + 1,
+            index,
+          ),
         ),
-      ),
-    );
+      );
+      sectionsCount = sections.length;
+    }
 
     return NextResponse.json(
       {
         success: true,
         document,
-        sections: sections.length,
-        message: `Document uploaded and split into ${sections.length} sections`,
+        sections: sectionsCount,
+        message:
+          sectionsCount > 0
+            ? `Document uploaded and split into ${sectionsCount} sections`
+            : "Document uploaded but text extraction returned empty. You can retry processing from the document page.",
       },
       { status: 201 },
     );

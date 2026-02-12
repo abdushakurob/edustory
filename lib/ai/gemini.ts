@@ -306,3 +306,57 @@ export async function extractImageText(imageData: Buffer): Promise<string> {
     throw error;
   }
 }
+
+/**
+ * Extract text from any document type using Gemini.
+ * Sends the raw file to the LLM for text extraction.
+ */
+export async function extractDocumentText(
+  buffer: Buffer,
+  fileType: string,
+  fileName: string,
+): Promise<string> {
+  // Map file extensions to MIME types that Gemini accepts
+  const mimeTypeMap: Record<string, string> = {
+    pdf: "application/pdf",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ppt: "application/vnd.ms-powerpoint",
+    pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    txt: "text/plain",
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+  };
+
+  const mimeType = mimeTypeMap[fileType] || "application/octet-stream";
+
+  try {
+    const result = await visionModel.generateContent([
+      {
+        inlineData: {
+          data: buffer.toString("base64"),
+          mimeType: mimeType,
+        },
+      },
+      {
+        text: `Extract ALL text content from this ${fileType.toUpperCase()} file (${fileName}). 
+
+Instructions:
+- Extract every piece of text content from the document
+- Preserve the structure: headings, paragraphs, lists, tables
+- For images/diagrams within the document, describe them in detail
+- For charts/graphs, describe the data they represent
+- Maintain the original order of content
+- Format the output as clean, readable plain text
+- Use line breaks to separate sections
+- Do NOT add commentary or analysis — just extract the raw content faithfully`,
+      },
+    ]);
+
+    return result.response.text();
+  } catch (error) {
+    console.error(`Error extracting text from ${fileName}:`, error);
+    throw error;
+  }
+}
+
