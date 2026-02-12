@@ -18,6 +18,10 @@ export default async function DocumentPage({
 
   const document = await getDocument(params.documentId);
 
+  if (!document) {
+    redirect(`/dashboard/subject/${params.id}`);
+  }
+
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
