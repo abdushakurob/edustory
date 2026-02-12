@@ -49,76 +49,88 @@ export function LoginForm({ isRegister = false }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-      <div className="space-y-2">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-neutral-700"
-        >
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input-base"
-          placeholder="you@example.com"
-          required
-          disabled={loading}
-        />
-      </div>
-
-      {isRegister && (
+    <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
+      <div className="space-y-4">
         <div className="space-y-2">
           <label
-            htmlFor="name"
+            htmlFor="email"
             className="block text-sm font-medium text-neutral-700"
           >
-            Name
+            Email address
           </label>
           <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="input-base"
-            placeholder="John Doe"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="glass-input w-full"
+            placeholder="you@example.com"
+            required
             disabled={loading}
           />
         </div>
-      )}
 
-      <div className="space-y-2">
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-neutral-700"
-        >
-          Password
-        </label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="input-base"
-          placeholder="••••••••"
-          required
-          disabled={loading}
-        />
+        {isRegister && (
+          <div className="space-y-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-neutral-700"
+            >
+              Full Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="glass-input w-full"
+              placeholder="John Doe"
+              disabled={loading}
+            />
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-neutral-700"
+          >
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="glass-input w-full"
+            placeholder="••••••••"
+            required
+            disabled={loading}
+          />
+        </div>
       </div>
 
-      <button type="submit" disabled={loading} className="btn-primary w-full">
-        {loading ? "Loading..." : isRegister ? "Sign Up" : "Sign In"}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? (
+          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+        ) : isRegister ? (
+          "Create account"
+        ) : (
+          "Sign in"
+        )}
       </button>
 
-      <div className="text-center text-sm text-neutral-600">
+      <div className="text-center text-sm text-neutral-500">
         {isRegister ? (
           <>
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-medium text-blue-600 hover:underline"
+              className="font-medium text-neutral-900 hover:underline"
             >
               Sign in
             </Link>
@@ -128,7 +140,7 @@ export function LoginForm({ isRegister = false }: LoginFormProps) {
             Don&apos;t have an account?{" "}
             <Link
               href="/register"
-              className="font-medium text-blue-600 hover:underline"
+              className="font-medium text-neutral-900 hover:underline"
             >
               Sign up
             </Link>
