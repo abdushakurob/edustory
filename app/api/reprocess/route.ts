@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { chunkText } from "@/lib/file/extraction";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
     try {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // Re-chunk and create sections directly via Prisma
+        // Re-chunk and create sections
         const chunks = chunkText(document.extractedText, 1500);
 
         if (chunks.length === 0) {
