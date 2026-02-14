@@ -49,7 +49,7 @@ export default function DocumentClient({
 
   if (!sections || sections.length === 0) {
     return (
-      <main className="max-w-4xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="text-center text-neutral-500">
           <p className="text-lg">No sections available yet.</p>
         </div>
@@ -105,14 +105,14 @@ export default function DocumentClient({
       />
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        <GlassPanel className="p-8 md:p-10 backdrop-blur-2xl">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <GlassPanel className="p-4 sm:p-8 md:p-10 backdrop-blur-2xl">
           {/* Section Header */}
           <div className="mb-8">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center justify-center w-10 h-10 bg-blue-100/50 text-blue-600 rounded-full font-semibold text-sm backdrop-blur-sm border border-blue-200/50">
+                  <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-blue-100/50 text-blue-600 rounded-full font-semibold text-xs sm:text-sm backdrop-blur-sm border border-blue-200/50">
                     {currentIndex + 1}
                   </span>
                   <h2 className="heading-3">
@@ -145,7 +145,7 @@ export default function DocumentClient({
           {/* Content Sections */}
           <div className="space-y-8">
             {/* Original Content */}
-            <div className="p-6 bg-gradient-to-br from-amber-50/50 to-orange-50/50 rounded-xl border border-amber-200/50 backdrop-blur-sm">
+            <div className="p-4 sm:p-6 bg-gradient-to-br from-amber-50/50 to-orange-50/50 rounded-xl border border-amber-200/50 backdrop-blur-sm">
               <div className="flex items-start gap-3 mb-3">
                 <h3 className="font-semibold text-neutral-900">
                   Source Material

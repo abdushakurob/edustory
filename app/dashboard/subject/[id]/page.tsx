@@ -30,7 +30,7 @@ export default async function SubjectPage({
     <div className="min-h-screen bg-background pb-12">
       {/* Header */}
       <header className="border-b border-white/10 bg-glass-surface/30 backdrop-blur-xl sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <Link
             href="/dashboard"
             className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors mb-4 text-sm font-medium"
@@ -40,9 +40,9 @@ export default async function SubjectPage({
           </Link>
           <div className="flex justify-between items-start">
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">{subject.title}</h1>
-                <span className="px-3 py-1 bg-blue-100/50 text-blue-700 border border-blue-200/50 rounded-full text-xs font-medium backdrop-blur-sm">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">{subject.title}</h1>
+                <span className="px-2 sm:px-3 py-1 bg-blue-100/50 text-blue-700 border border-blue-200/50 rounded-full text-xs font-medium backdrop-blur-sm">
                   {subject.theme}
                 </span>
               </div>
@@ -55,7 +55,7 @@ export default async function SubjectPage({
       </header>
 
       {/* Main */}
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Upload Section */}
           <div className="lg:col-span-1">

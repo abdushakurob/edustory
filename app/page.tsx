@@ -9,32 +9,32 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+      <section className="pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 relative overflow-hidden">
         {/* Background Decoration */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-50/50 rounded-full blur-3xl -z-10 opacity-60"></div>
 
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 leading-[1.1]">
-            Turn your documents into <br />
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 leading-[1.1]">
+            Turn your documents into <br className="hidden sm:block" />
             <span className="text-blue-600">captivating stories.</span>
           </h1>
 
-          <p className="text-xl text-neutral-500 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-xl text-neutral-500 max-w-2xl mx-auto leading-relaxed">
             Edustory transforms dry academic papers, PDFs, and lecture notes into
             engaging narratives, helping you learn faster and retain more.
           </p>
 
-          <div className="flex items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
             <Link
               href="/register"
-              className="group bg-blue-600 text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 flex items-center gap-2 hover:-translate-y-1"
+              className="group bg-blue-600 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-medium text-base sm:text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 flex items-center gap-2 hover:-translate-y-1 w-full sm:w-auto justify-center"
             >
               Start Learning for Free
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/login"
-              className="px-8 py-4 rounded-xl font-medium text-neutral-600 hover:bg-neutral-50 transition-all border border-neutral-200 hover:border-neutral-300"
+              className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-medium text-neutral-600 hover:bg-neutral-50 transition-all border border-neutral-200 hover:border-neutral-300 w-full sm:w-auto text-center"
             >
               Sign In
             </Link>
@@ -52,7 +52,7 @@ export default function Home() {
       </section>
 
       {/* How it Works */}
-      <section className="py-24 px-6 bg-neutral-50/50">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-neutral-50/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-neutral-900 mb-4">How Edustory Works</h2>
@@ -78,7 +78,7 @@ export default function Home() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-24 px-6">
+      <section className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">

@@ -16,7 +16,8 @@ export default async function DashboardLayout({
     return (
         <div className="flex min-h-screen bg-neutral-50">
             <Sidebar user={session} />
-            <main className="flex-1 ml-64 p-8">
+            {/* pt-14 accounts for mobile top bar, lg:pt-0 removes it on desktop */}
+            <main className="flex-1 pt-14 lg:pt-0 lg:ml-64 p-4 sm:p-6 lg:p-8">
                 {children}
             </main>
         </div>

@@ -34,7 +34,7 @@ export default async function DocumentPage({
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="border-b border-white/10 bg-glass-surface/30 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <Link
             href={`/dashboard/subject/${params.id}`}
             className="flex items-center gap-2 text-neutral-600 hover:text-neutral-900 transition-colors mb-4 text-sm font-medium"
@@ -42,7 +42,7 @@ export default async function DocumentPage({
             <ArrowLeft size={16} />
             Back to Subject
           </Link>
-          <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">{document.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">{document.title}</h1>
           <p className="text-neutral-500 mt-2">
             {hasSections ? "Interactive Story Mode" : "Document Processing"}
           </p>
@@ -55,7 +55,7 @@ export default async function DocumentPage({
           sections={document.sections}
         />
       ) : (
-        <main className="max-w-4xl mx-auto px-6 py-12">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center space-y-4">
             <div className="w-16 h-16 mx-auto bg-amber-100 rounded-full flex items-center justify-center">
               <ArrowLeft size={24} className="text-amber-600" />

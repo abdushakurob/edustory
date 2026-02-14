@@ -25,10 +25,10 @@ export function ProgressStepper({
   );
 
   return (
-    <div className="bg-white border-b border-neutral-200 sticky top-16 z-30">
-      <div className="max-w-6xl mx-auto px-6 py-6">
+    <div className="bg-white border-b border-neutral-200 sticky top-14 lg:top-0 z-30">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {/* Progress Bar */}
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <div className="flex justify-between items-center mb-2">
             <h3 className="text-sm font-semibold text-neutral-900">
               Your Learning Progress
@@ -56,13 +56,12 @@ export function ProgressStepper({
                 <button
                   key={section.id}
                   onClick={() => onSectionChange(index)}
-                  className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${
-                    isCurrent
+                  className={`flex-shrink-0 px-4 py-2 rounded-lg font-medium text-sm transition-all whitespace-nowrap ${isCurrent
                       ? "bg-blue-600 text-white shadow-md"
                       : isCompleted
                         ? "bg-green-100 text-green-800 border border-green-200"
                         : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-2">
                     {isCompleted && <Check size={16} />}
@@ -102,11 +101,10 @@ export function SectionNavigator({
       <button
         onClick={onPrevious}
         disabled={isFirstSection}
-        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-          isFirstSection
+        className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium text-sm transition-all ${isFirstSection
             ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
             : "bg-neutral-100 text-neutral-900 hover:bg-neutral-200"
-        }`}
+          }`}
       >
         <ChevronLeft size={20} />
         Previous
@@ -121,11 +119,10 @@ export function SectionNavigator({
       <button
         onClick={onNext}
         disabled={isLastSection}
-        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-          isLastSection
+        className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium text-sm transition-all ${isLastSection
             ? "bg-green-100 text-green-800 hover:bg-green-200"
             : "bg-blue-600 text-white hover:bg-blue-700"
-        }`}
+          }`}
       >
         {isLastSection ? (
           <>
